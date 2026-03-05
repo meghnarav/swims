@@ -148,4 +148,4 @@ def refresh_data(n, n_save):
     return kpis, tbl, fig_i, fig_t, opt_p, opt_w, opt_e
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8050)
+    app.run(debug=True, port=8050)
