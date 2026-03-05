@@ -16,7 +16,7 @@ layout = html.Div([
 
     html.H2("Suppliers"),
     dash_table.DataTable(
-        columns=[{"name": i, "id": i} for i in suppliers[0].keys()],
+        columns=[{"name": i, "id": i} for i in products[0].keys()] if len(products) > 0 else [],
         data=suppliers
     ),
 

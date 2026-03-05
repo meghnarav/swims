@@ -8,17 +8,16 @@ def fetch_suppliers():
     conn.close()
     return data
 
+
+
 def fetch_products():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT p.product_id, p.product_name, p.category, p.unit_price, s.supplier_name
-        FROM Product p
-        JOIN Supplier s ON p.supplier_id = s.supplier_id
-    """)
-    data = cursor.fetchall()
+    cursor.execute("SELECT * FROM Product")
+    rows = cursor.fetchall()
+    cursor.close()
     conn.close()
-    return data
+    return rows
 
 def fetch_inventory():
     conn = get_connection()

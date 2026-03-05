@@ -23,12 +23,12 @@ INSERT INTO Employee (employee_id, name, role) VALUES
 (5,'Karan Mehta','Warehouse Staff');
 
 -- PERMANENT EMP
-INSERT INTO Permanent_Emp (employee_id, monthly_salary, benefits) VALUES
+INSERT INTO Permanent_Employee (employee_id, monthly_salary, benefits) VALUES
 (1,60000,'Health Insurance'),
 (2,50000,'Health Insurance');
 
 -- CONTRACT EMP
-INSERT INTO Contract_Emp (employee_id, hourly_rate, contract_end_date) VALUES
+INSERT INTO Contract_Employee (employee_id, hourly_rate, contract_end_date) VALUES
 (3,400,'2026-12-31'),
 (4,350,'2026-10-31'),
 (5,300,'2026-09-30');
