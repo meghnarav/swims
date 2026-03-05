@@ -1,9 +1,7 @@
-import dash
-from dash import dcc, html
-from dash import dash_table
+from dash import Dash
 from layouts import layout
 
-app = dash.Dash(__name__)
+app = Dash(__name__)
 app.title = "SWIMS Dashboard"
 app.layout = layout
 
