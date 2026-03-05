@@ -1,7 +1,13 @@
-from dash import Dash
+import sys
+import os
+
+sys.path.append(os.path.abspath(".."))
+
+import dash
+from dash import html
 from layouts import layout
 
-app = Dash(__name__)
+app = dash.Dash(__name__)
 app.title = "SWIMS Dashboard"
 app.layout = layout
 
