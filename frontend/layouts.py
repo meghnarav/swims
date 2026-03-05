@@ -1,19 +1,19 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import pandas as pd
 from dash import html, dash_table, dcc
 import plotly.express as px
 
-from backend.queries import (
-    fetch_products,
-    fetch_suppliers,
-    fetch_inventory,
-    fetch_stock_transactions
-)
+from backend import queries
 
 # Fetch data
-products = fetch_products()
-suppliers = fetch_suppliers()
-inventory = fetch_inventory()
-transactions = fetch_stock_transactions()
+products = queries.fetch_products()
+suppliers = queries.fetch_suppliers()
+inventory = queries.fetch_inventory()
+transactions = queries.fetch_stock_transactions()
 
 # Convert to DataFrame
 products_df = pd.DataFrame(products)
@@ -55,7 +55,7 @@ else:
     transaction_chart = {}
 
 # ======================
-# TABLES
+# TABLE GENERATOR
 # ======================
 
 def create_table(df):
@@ -82,6 +82,7 @@ transactions_table = create_table(transactions_df)
 # ======================
 
 kpi_cards = html.Div([
+
     html.Div([
         html.H4("Products"),
         html.H2(total_products)
@@ -109,12 +110,12 @@ kpi_cards = html.Div([
 })
 
 # ======================
-# LAYOUT
+# FINAL LAYOUT
 # ======================
 
 layout = html.Div([
 
-    html.H1("SWIMS Inventory Management Dashboard"),
+    html.H1("SWIMS Inventory Dashboard"),
 
     kpi_cards,
 
