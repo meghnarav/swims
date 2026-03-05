@@ -3,7 +3,14 @@ from dash import html, dcc, dash_table, Input, Output, State, callback
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
+import sys
+import os
+
+# Adds the root directory (swims) to the python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from backend import queries
+# ... rest of your imports
 
 # Initialize App with a professional Slate theme
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
