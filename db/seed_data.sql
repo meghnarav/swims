@@ -9,7 +9,7 @@ INSERT INTO Supplier (supplier_id, supplier_name, contact_email, phone_number) V
 (7,'Glacier Goods','team@glaciergoods.com','9000022222'),
 (8,'Aurora Dairy','service@auroradairy.com','9000033333'),
 (9,'Snowflake Distributors','info@snowflake.com','9000044444'),
-(10,'Evercold Logistics','support@evercold.com','9000055555')
+(10,'Evercold Logistics','support@evercold.com','9000055555'),
 (11,'Crystal Ice Co','logistics@crystalice.com','9000066666'),
 (12,'Velvet Creamery','orders@velvetcream.com','9000077777'),
 (13,'Island Sorbets','aloha@islandsorbets.com','9000088888'),
