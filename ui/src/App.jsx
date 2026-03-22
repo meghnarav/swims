@@ -279,6 +279,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+
       {/* ── TOP HEADER (replaces useless sidebar) ── */}
       <header className="app-header">
         <div className="app-header__brand">
@@ -297,15 +298,20 @@ export default function App() {
       <main className="main">
 
         {/* ── KPI CARDS ── */}
-        <section id="dashboard" className="kpi-row">
-          <Card label="Products"     value={kpis.totalProducts}     />
-          <Card label="Suppliers"    value={kpis.totalSuppliers}    />
-          <Card label="Stock Units"  value={kpis.totalUnits}        />
-          <Card label="Transactions" value={kpis.totalTransactions} />
-        </section>
+        <div id="dashboard" className="section">
+          <p className="section-title">Overview</p>
+          <div className="kpi-row">
+            <Card label="Products"     value={kpis.totalProducts}     />
+            <Card label="Suppliers"    value={kpis.totalSuppliers}    />
+            <Card label="Stock Units"  value={kpis.totalUnits}        />
+            <Card label="Transactions" value={kpis.totalTransactions} />
+          </div>
+        </div>
 
         {/* ── CHARTS ── */}
-        <section className="layout-2col">
+        <div className="section">
+          <p className="section-title">Analytics</p>
+          <section className="layout-2col">
           <div className="col">
             <div className="panel">
               <h2>Stock by Warehouse</h2>
@@ -342,9 +348,12 @@ export default function App() {
             </div>
           </div>
         </section>
+        </div>
 
         {/* ── INVENTORY TABLE + SUPPLIERS TABLE ── */}
-        <section id="inventory" className="layout-2col">
+        <div id="inventory" className="section">
+          <p className="section-title">Inventory</p>
+          <section className="layout-2col">
           <div className="col">
             <div className="panel">
               <h2>Inventory by Warehouse</h2>
@@ -365,9 +374,12 @@ export default function App() {
             </div>
           </div>
         </section>
+        </div>
 
-        {/* ── STOCK MOVEMENT FORM + RECENT TRANSACTIONS (full width) ── */}
-        <section id="transactions" className="layout-2col">
+        {/* ── STOCK MOVEMENT FORM + RECENT TRANSACTIONS ── */}
+        <div id="transactions" className="section">
+          <p className="section-title">Transactions</p>
+          <section className="layout-2col">
           <div className="col">
             <StockMovementForm
               products={products}
@@ -393,9 +405,12 @@ export default function App() {
             </div>
           </div>
         </section>
+        </div>
 
         {/* ── ADD FORMS ── */}
-        <section id="manage" className="layout-3col">
+        <div id="manage" className="section">
+          <p className="section-title">Manage</p>
+          <section className="layout-3col">
           <SimpleCreateForm
             title="Add Supplier"
             endpoint="/suppliers"
@@ -428,10 +443,13 @@ export default function App() {
               },
             ]}
           />
-        </section>
+          </section>
+        </div>
 
         {/* ── DETAILED TABLES (3NF DISPLAY) ── */}
-        <section id="data" className="layout-2col">
+        <div id="data" className="section">
+          <p className="section-title">Data</p>
+          <section className="layout-2col">
           <div className="col">
             <div className="panel">
               <h2>Products (Detailed)</h2>
@@ -482,6 +500,7 @@ export default function App() {
             </div>
           </div>
         </section>
+        </div>
 
       </main>
     </div>

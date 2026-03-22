@@ -104,19 +104,39 @@ body {
   font-weight: 600;
 }
 
+/* ── Section wrapper ── */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section > section + section {
+  margin-top: 1.25rem;
+}
+
+.section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9ca3af;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
 /* ── Grid layouts ── */
 .layout-2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  align-items: start;
 }
 
 .layout-3col {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  align-items: start;
 }
 
 /* ── Panel ── */
