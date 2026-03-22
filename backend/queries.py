@@ -16,7 +16,8 @@ def fetch_suppliers():
         cursor.close()
         conn.close()
         return data
-    except Exception:
+    except Exception as e:
+        print("ERROR:", e)
         return []
 
 

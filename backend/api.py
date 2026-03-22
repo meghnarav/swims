@@ -131,9 +131,9 @@ def create_product(payload: Dict[str, Any]) -> Dict[str, Any]:
             status_code=400,
             detail="product_name and supplier_id are required",
         )
-    category = payload.get("category")
+    category_id = payload.get("category_id")
     unit_price = payload.get("unit_price")
-    new_id = queries.create_product(name, supplier_id, category, unit_price)
+    new_id = queries.create_product(name, supplier_id, category_id, unit_price)
     if new_id is None:
         raise HTTPException(status_code=500, detail="Failed to create product")
     return {"product_id": new_id}
@@ -148,9 +148,9 @@ def update_product(product_id: int, payload: Dict[str, Any]) -> Dict[str, Any]:
             status_code=400,
             detail="product_name and supplier_id are required",
         )
-    category = payload.get("category")
+    category_id = payload.get("category_id")
     unit_price = payload.get("unit_price")
-    ok = queries.update_product(product_id, name, supplier_id, category, unit_price)
+    ok = queries.update_product(product_id, name, supplier_id, category_id, unit_price)
     _ensure_found(ok, "Product")
     return {"ok": True}
 
@@ -199,10 +199,10 @@ def delete_warehouse(warehouse_id: int) -> None:
 @app.post("/employees", status_code=201)
 def create_employee(payload: Dict[str, Any]) -> Dict[str, Any]:
     name: Optional[str] = payload.get("name")
-    role: Optional[str] = payload.get("role")
-    if not name or not role:
-        raise HTTPException(status_code=400, detail="name and role are required")
-    new_id = queries.create_employee(name, role)
+    role_id: Optional[str] = payload.get("role_id")
+    if not name or not role_id:
+        raise HTTPException(status_code=400, detail="name and role_id are required")
+    new_id = queries.create_employee(name, role_id)
     if new_id is None:
         raise HTTPException(status_code=500, detail="Failed to create employee")
     return {"employee_id": new_id}
@@ -211,10 +211,10 @@ def create_employee(payload: Dict[str, Any]) -> Dict[str, Any]:
 @app.put("/employees/{employee_id}")
 def update_employee(employee_id: int, payload: Dict[str, Any]) -> Dict[str, Any]:
     name: Optional[str] = payload.get("name")
-    role: Optional[str] = payload.get("role")
-    if not name or not role:
-        raise HTTPException(status_code=400, detail="name and role are required")
-    ok = queries.update_employee(employee_id, name, role)
+    role_id: Optional[str] = payload.get("role_id")
+    if not name or not role_id:
+        raise HTTPException(status_code=400, detail="name and role_id are required")
+    ok = queries.update_employee(employee_id, name, role_id)
     _ensure_found(ok, "Employee")
     return {"ok": True}
 
