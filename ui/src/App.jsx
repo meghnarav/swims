@@ -364,7 +364,9 @@ export default function App() {
             fields={[
               { name: "product_name", label: "Product Name", required: true },
               { name: "supplier_id", label: "Supplier ID", required: true },
-              { name: "category", label: "Category" },
+              { name: "category_id", label: "Category ID", type: "select",
+                options: categories.map(c => ({ value: c.category_id, label: c.category_name }))
+              }
             ]}
           />
           <SimpleCreateForm
@@ -372,7 +374,9 @@ export default function App() {
             endpoint="/employees"
             fields={[
               { name: "name", label: "Name", required: true },
-              { name: "role", label: "Role", required: true },
+              { name: "role_id", label: "Role", type: "select", 
+                options: roles.map(r => ({ value: r.role_id, label: r.role_name}))
+              }
             ]}
           />
         </section>
