@@ -79,7 +79,7 @@ export default function AddEmployeeForm({ roles, onSuccess }) {
 
         {/* Name */}
         <div className="form-row">
-          <label>Name *</label>
+          <label>Name</label>
           <input
             value={name}
             onChange={e => setName(e.target.value)}
@@ -89,7 +89,7 @@ export default function AddEmployeeForm({ roles, onSuccess }) {
 
         {/* Role */}
         <div className="form-row">
-          <label>Role *</label>
+          <label>Role</label>
           <select value={roleId} onChange={e => setRoleId(e.target.value)}>
             <option value="">Select role...</option>
             {roles.map(r => (
