@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
+import AddEmployeeForm from "./AddEmployeeForm";
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -284,7 +285,7 @@ export default function App() {
       <header className="app-header">
         <div className="app-header__brand">
           <h1>SWIMS</h1>
-          <span className="muted">Supplier-Warehouse Inventory Management</span>
+          <span className="muted">Supplier-Warehouse Inventory Management System</span>
         </div>
         <nav className="app-header__nav">
           <a href="#dashboard">Dashboard</a>

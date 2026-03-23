@@ -1,5 +1,5 @@
 from .db_connection import get_connection
-
+from typing import Optional, Dict, Any
 
 # ---------------------------------------------------------------------------
 # Read helpers
@@ -81,6 +81,38 @@ def fetch_employees():
     except Exception:
         return []
 
+def add_permanent_employee(
+    employee_id: int,
+    monthly_salary: Optional[float],
+    benefits: Optional[str]
+) -> None:
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO Permanent_Employee (employee_id, monthly_salary, benefits)
+                VALUES (%s, %s, %s)
+                """,
+                (employee_id, monthly_salary, benefits),
+            )
+        conn.commit()
+
+
+def add_contract_employee(
+    employee_id: int,
+    hourly_rate: Optional[float],
+    contract_end_date: Optional[str]
+) -> None:
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO Contract_Employee (employee_id, hourly_rate, contract_end_date)
+                VALUES (%s, %s, %s)
+                """,
+                (employee_id, hourly_rate, contract_end_date),
+            )
+        conn.commit()
 
 def fetch_inventory():
     try:

@@ -202,6 +202,30 @@ def delete_warehouse(warehouse_id: int) -> None:
 
 # ---------------------- Employee CRUD ---------------------- #
 
+# ⚠️ Static routes MUST come before /{employee_id} or FastAPI
+#    treats "permanent"/"contract" as an int ID and returns 422.
+
+@app.post("/employees/permanent", status_code=201)
+def add_permanent_employee(payload: Dict[str, Any]) -> Dict[str, Any]:
+    employee_id:    Optional[int]   = payload.get("employee_id")
+    monthly_salary: Optional[float] = payload.get("monthly_salary")
+    benefits:       Optional[str]   = payload.get("benefits")
+    if not employee_id:
+        raise HTTPException(status_code=400, detail="employee_id is required")
+    queries.add_permanent_employee(employee_id, monthly_salary, benefits)
+    return {"ok": True}
+
+
+@app.post("/employees/contract", status_code=201)
+def add_contract_employee(payload: Dict[str, Any]) -> Dict[str, Any]:
+    employee_id:       Optional[int]   = payload.get("employee_id")
+    hourly_rate:       Optional[float] = payload.get("hourly_rate")
+    contract_end_date: Optional[str]   = payload.get("contract_end_date")
+    if not employee_id:
+        raise HTTPException(status_code=400, detail="employee_id is required")
+    queries.add_contract_employee(employee_id, hourly_rate, contract_end_date)
+    return {"ok": True}
+
 
 @app.post("/employees", status_code=201)
 def create_employee(payload: Dict[str, Any]) -> Dict[str, Any]:

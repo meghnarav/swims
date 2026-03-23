@@ -258,6 +258,41 @@ button:hover {
   color: #059669;
 }
 
+/* ── Toggle button group (Permanent / Contract) ── */
+.toggle-group {
+  display: flex;
+  border-radius: 0.45rem;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+  width: fit-content;
+}
+
+.toggle-btn {
+  padding: 0.4rem 1.1rem;
+  border: none;
+  border-radius: 0;
+  background: #f9fafb;
+  color: #6b7280;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  align-self: auto;
+}
+
+.toggle-btn + .toggle-btn {
+  border-left: 1px solid #d1d5db;
+}
+
+.toggle-btn.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.toggle-btn:hover:not(.active) {
+  background: #f3f4f6;
+  color: #111827;
+}
+
 /* ── Responsive ── */
 @media (max-width: 960px) {
   .app-header__nav {
