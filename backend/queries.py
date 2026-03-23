@@ -1,9 +1,37 @@
 from .db_connection import get_connection
-from typing import Optional, Dict, Any
+from typing import Optional
 
 # ---------------------------------------------------------------------------
 # Read helpers
 # ---------------------------------------------------------------------------
+
+def fetch_categories():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT category_id, category_name FROM Category")
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except Exception as e:
+        print("ERROR fetch_categories:", e)
+        return []
+
+
+def fetch_roles():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT role_id, role_name FROM Role")
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except Exception as e:
+        print("ERROR fetch_roles:", e)
+        return []
+
 
 def fetch_suppliers():
     try:
@@ -17,7 +45,7 @@ def fetch_suppliers():
         conn.close()
         return data
     except Exception as e:
-        print("ERROR:", e)
+        print("ERROR fetch_suppliers:", e)
         return []
 
 
@@ -32,6 +60,7 @@ def fetch_products():
                    c.category_name,
                    p.unit_price,
                    p.supplier_id,
+                   p.category_id,
                    s.supplier_name
             FROM Product p
             JOIN Supplier s ON p.supplier_id = s.supplier_id
@@ -42,7 +71,8 @@ def fetch_products():
         cursor.close()
         conn.close()
         return data
-    except Exception:
+    except Exception as e:
+        print("ERROR fetch_products:", e)
         return []
 
 
@@ -50,14 +80,13 @@ def fetch_warehouses():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(
-            "SELECT warehouse_id, location, capacity FROM Warehouse"
-        )
+        cursor.execute("SELECT warehouse_id, location, capacity FROM Warehouse")
         data = cursor.fetchall()
         cursor.close()
         conn.close()
         return data
-    except Exception:
+    except Exception as e:
+        print("ERROR fetch_warehouses:", e)
         return []
 
 
@@ -69,6 +98,7 @@ def fetch_employees():
             """
             SELECT e.employee_id,
                    e.name,
+                   e.role_id,
                    r.role_name
             FROM Employee e
             JOIN Role r ON e.role_id = r.role_id
@@ -78,41 +108,10 @@ def fetch_employees():
         cursor.close()
         conn.close()
         return data
-    except Exception:
+    except Exception as e:
+        print("ERROR fetch_employees:", e)
         return []
 
-def add_permanent_employee(
-    employee_id: int,
-    monthly_salary: Optional[float],
-    benefits: Optional[str]
-) -> None:
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO Permanent_Employee (employee_id, monthly_salary, benefits)
-                VALUES (%s, %s, %s)
-                """,
-                (employee_id, monthly_salary, benefits),
-            )
-        conn.commit()
-
-
-def add_contract_employee(
-    employee_id: int,
-    hourly_rate: Optional[float],
-    contract_end_date: Optional[str]
-) -> None:
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO Contract_Employee (employee_id, hourly_rate, contract_end_date)
-                VALUES (%s, %s, %s)
-                """,
-                (employee_id, hourly_rate, contract_end_date),
-            )
-        conn.commit()
 
 def fetch_inventory():
     try:
@@ -134,7 +133,8 @@ def fetch_inventory():
         cursor.close()
         conn.close()
         return data
-    except Exception:
+    except Exception as e:
+        print("ERROR fetch_inventory:", e)
         return []
 
 
@@ -162,17 +162,20 @@ def fetch_stock_transactions():
         cursor.close()
         conn.close()
         return data
-    except Exception:
+    except Exception as e:
+        print("ERROR fetch_stock_transactions:", e)
         return []
+
 
 def fetch_employees_detailed():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT e.employee_id,
                    e.name,
+                   e.role_id,
                    r.role_name,
                    CASE
                        WHEN pe.employee_id IS NOT NULL THEN 'Permanent'
@@ -186,22 +189,23 @@ def fetch_employees_detailed():
             JOIN Role r ON e.role_id = r.role_id
             LEFT JOIN Permanent_Employee pe ON e.employee_id = pe.employee_id
             LEFT JOIN Contract_Employee ce ON e.employee_id = ce.employee_id
-        """)
-
+            """
+        )
         data = cursor.fetchall()
         cursor.close()
         conn.close()
         return data
     except Exception as e:
-        print("ERROR:", e)
+        print("ERROR fetch_employees_detailed:", e)
         return []
-    
+
+
 def fetch_products_detailed():
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT p.product_id,
                    p.product_name,
                    c.category_name,
@@ -210,17 +214,15 @@ def fetch_products_detailed():
             FROM Product p
             JOIN Supplier s ON p.supplier_id = s.supplier_id
             JOIN Category c ON p.category_id = c.category_id
-        """)
-
+            """
+        )
         data = cursor.fetchall()
         cursor.close()
         conn.close()
         return data
     except Exception as e:
-        print("ERROR:", e)
+        print("ERROR fetch_products_detailed:", e)
         return []
-    
-
 
 
 # ---------------------------------------------------------------------------
@@ -232,15 +234,13 @@ def create_supplier(name, email=None, phone=None):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            INSERT INTO Supplier (supplier_name, contact_email, phone_number)
-            VALUES (%s, %s, %s)
-            """,
+            "INSERT INTO Supplier (supplier_name, contact_email, phone_number) VALUES (%s, %s, %s)",
             (name, email, phone),
         )
         conn.commit()
         return cursor.lastrowid
-    except Exception:
+    except Exception as e:
+        print("ERROR create_supplier:", e)
         conn.rollback()
         return None
     finally:
@@ -253,18 +253,13 @@ def update_supplier(supplier_id, name, email=None, phone=None):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            UPDATE Supplier
-            SET supplier_name = %s,
-                contact_email = %s,
-                phone_number = %s
-            WHERE supplier_id = %s
-            """,
+            "UPDATE Supplier SET supplier_name=%s, contact_email=%s, phone_number=%s WHERE supplier_id=%s",
             (name, email, phone, supplier_id),
         )
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR update_supplier:", e)
         conn.rollback()
         return False
     finally:
@@ -276,12 +271,11 @@ def delete_supplier(supplier_id):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "DELETE FROM Supplier WHERE supplier_id = %s", (supplier_id,)
-        )
+        cursor.execute("DELETE FROM Supplier WHERE supplier_id=%s", (supplier_id,))
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR delete_supplier:", e)
         conn.rollback()
         return False
     finally:
@@ -294,15 +288,13 @@ def create_product(name, supplier_id, category_id=None, unit_price=None):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            INSERT INTO Product (product_name, supplier_id, category_id, unit_price)
-            VALUES (%s, %s, %s, %s)
-            """,
+            "INSERT INTO Product (product_name, supplier_id, category_id, unit_price) VALUES (%s, %s, %s, %s)",
             (name, supplier_id, category_id, unit_price),
         )
         conn.commit()
         return cursor.lastrowid
-    except Exception:
+    except Exception as e:
+        print("ERROR create_product:", e)
         conn.rollback()
         return None
     finally:
@@ -315,19 +307,13 @@ def update_product(product_id, name, supplier_id, category_id=None, unit_price=N
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            UPDATE Product
-            SET product_name = %s,
-                supplier_id = %s,
-                category_id = %s,
-                unit_price = %s
-            WHERE product_id = %s
-            """,
+            "UPDATE Product SET product_name=%s, supplier_id=%s, category_id=%s, unit_price=%s WHERE product_id=%s",
             (name, supplier_id, category_id, unit_price, product_id),
         )
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR update_product:", e)
         conn.rollback()
         return False
     finally:
@@ -339,12 +325,11 @@ def delete_product(product_id):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "DELETE FROM Product WHERE product_id = %s", (product_id,)
-        )
+        cursor.execute("DELETE FROM Product WHERE product_id=%s", (product_id,))
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR delete_product:", e)
         conn.rollback()
         return False
     finally:
@@ -357,15 +342,13 @@ def create_warehouse(location, capacity=None):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            INSERT INTO Warehouse (location, capacity)
-            VALUES (%s, %s)
-            """,
+            "INSERT INTO Warehouse (location, capacity) VALUES (%s, %s)",
             (location, capacity),
         )
         conn.commit()
         return cursor.lastrowid
-    except Exception:
+    except Exception as e:
+        print("ERROR create_warehouse:", e)
         conn.rollback()
         return None
     finally:
@@ -378,17 +361,13 @@ def update_warehouse(warehouse_id, location, capacity=None):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            UPDATE Warehouse
-            SET location = %s,
-                capacity = %s
-            WHERE warehouse_id = %s
-            """,
+            "UPDATE Warehouse SET location=%s, capacity=%s WHERE warehouse_id=%s",
             (location, capacity, warehouse_id),
         )
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR update_warehouse:", e)
         conn.rollback()
         return False
     finally:
@@ -400,12 +379,11 @@ def delete_warehouse(warehouse_id):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "DELETE FROM Warehouse WHERE warehouse_id = %s", (warehouse_id,)
-        )
+        cursor.execute("DELETE FROM Warehouse WHERE warehouse_id=%s", (warehouse_id,))
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR delete_warehouse:", e)
         conn.rollback()
         return False
     finally:
@@ -418,15 +396,13 @@ def create_employee(name, role_id):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            INSERT INTO Employee (name, role_id)
-            VALUES (%s, %s)
-            """,
+            "INSERT INTO Employee (name, role_id) VALUES (%s, %s)",
             (name, role_id),
         )
         conn.commit()
         return cursor.lastrowid
-    except Exception:
+    except Exception as e:
+        print("ERROR create_employee:", e)
         conn.rollback()
         return None
     finally:
@@ -439,17 +415,13 @@ def update_employee(employee_id, name, role_id):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            UPDATE Employee
-            SET name = %s,
-                role_id = %s
-            WHERE employee_id = %s
-            """,
+            "UPDATE Employee SET name=%s, role_id=%s WHERE employee_id=%s",
             (name, role_id, employee_id),
         )
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR update_employee:", e)
         conn.rollback()
         return False
     finally:
@@ -461,14 +433,47 @@ def delete_employee(employee_id):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "DELETE FROM Employee WHERE employee_id = %s", (employee_id,)
-        )
+        cursor.execute("DELETE FROM Employee WHERE employee_id=%s", (employee_id,))
         conn.commit()
         return cursor.rowcount > 0
-    except Exception:
+    except Exception as e:
+        print("ERROR delete_employee:", e)
         conn.rollback()
         return False
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def add_permanent_employee(employee_id: int, monthly_salary: Optional[float], benefits: Optional[str]) -> None:
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "INSERT INTO Permanent_Employee (employee_id, monthly_salary, benefits) VALUES (%s, %s, %s)",
+            (employee_id, monthly_salary, benefits),
+        )
+        conn.commit()
+    except Exception as e:
+        print("ERROR add_permanent_employee:", e)
+        conn.rollback()
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def add_contract_employee(employee_id: int, hourly_rate: Optional[float], contract_end_date: Optional[str]) -> None:
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "INSERT INTO Contract_Employee (employee_id, hourly_rate, contract_end_date) VALUES (%s, %s, %s)",
+            (employee_id, hourly_rate, contract_end_date),
+        )
+        conn.commit()
+    except Exception as e:
+        print("ERROR add_contract_employee:", e)
+        conn.rollback()
     finally:
         cursor.close()
         conn.close()
@@ -477,10 +482,7 @@ def delete_employee(employee_id):
 def add_stock_movement(prod_id, wh_id, emp_id, qty, t_type):
     if not all([prod_id, wh_id, emp_id, qty]):
         return False
-
-    # Normalize transaction type to match ENUM('INWARD','OUTWARD')
     t_type = "INWARD" if str(t_type).upper().startswith("IN") else "OUTWARD"
-
     conn = get_connection()
     cursor = conn.cursor()
     try:
@@ -493,7 +495,6 @@ def add_stock_movement(prod_id, wh_id, emp_id, qty, t_type):
             """,
             (t_type, prod_id, qty, wh_id, emp_id),
         )
-
         adj_qty = int(qty) if t_type == "INWARD" else -int(qty)
         cursor.execute(
             """
@@ -505,54 +506,71 @@ def add_stock_movement(prod_id, wh_id, emp_id, qty, t_type):
         )
         conn.commit()
         return True
-    except Exception:
+    except Exception as e:
+        print("ERROR add_stock_movement:", e)
         conn.rollback()
         return False
     finally:
         cursor.close()
         conn.close()
 
-# ── Add these to queries.py ──
-
 
 def create_inventory(product_id: int, warehouse_id: int, quantity: int) -> bool:
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO Inventory (product_id, warehouse_id, quantity)
-                VALUES (%s, %s, %s)
-                ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
-                """,
-                (product_id, warehouse_id, quantity),
-            )
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            INSERT INTO Inventory (product_id, warehouse_id, quantity)
+            VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+            """,
+            (product_id, warehouse_id, quantity),
+        )
         conn.commit()
-    return True
+        return True
+    except Exception as e:
+        print("ERROR create_inventory:", e)
+        conn.rollback()
+        return False
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def update_inventory(product_id: int, warehouse_id: int, quantity: int) -> bool:
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                UPDATE Inventory
-                SET quantity = %s
-                WHERE product_id = %s AND warehouse_id = %s
-                """,
-                (quantity, product_id, warehouse_id),
-            )
-            updated = cur.rowcount
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "UPDATE Inventory SET quantity=%s WHERE product_id=%s AND warehouse_id=%s",
+            (quantity, product_id, warehouse_id),
+        )
         conn.commit()
-    return updated > 0
+        return cursor.rowcount > 0
+    except Exception as e:
+        print("ERROR update_inventory:", e)
+        conn.rollback()
+        return False
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def delete_inventory(product_id: int, warehouse_id: int) -> bool:
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "DELETE FROM Inventory WHERE product_id = %s AND warehouse_id = %s",
-                (product_id, warehouse_id),
-            )
-            deleted = cur.rowcount
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "DELETE FROM Inventory WHERE product_id=%s AND warehouse_id=%s",
+            (product_id, warehouse_id),
+        )
         conn.commit()
-    return deleted > 0
+        return cursor.rowcount > 0
+    except Exception as e:
+        print("ERROR delete_inventory:", e)
+        conn.rollback()
+        return False
+    finally:
+        cursor.close()
+        conn.close()
