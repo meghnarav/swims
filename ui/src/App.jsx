@@ -120,7 +120,7 @@ export default function App() {
       <aside className="sidebar">
         <div className="sidebar__brand">
           <h1>SWIMS</h1>
-          <p>Supplier-Warehouse Inventory Management</p>
+          <p>Supplier-Warehouse Inventory Management System</p>
         </div>
         <nav className="sidebar__nav">
           {NAV.map((item, i) => {
