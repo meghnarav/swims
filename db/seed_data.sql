@@ -10,7 +10,7 @@ TRUNCATE TABLE Warehouse;
 TRUNCATE TABLE Supplier;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- 1. TOP 5 SUPPLIERS
+-- 1. SUPPLIERS
 INSERT INTO Supplier (supplier_id, supplier_name, contact_email, phone_number) VALUES
 (1,'Arctic Foods','contact@arcticfoods.com','9876543210'),
 (2,'Fresh Dairy Co','info@freshdairy.com','9812345670'),
@@ -68,7 +68,7 @@ INSERT INTO Product (product_id, product_name, supplier_id, category_id, unit_pr
 (9,'Mint Choco Chip',4,1,135),
 (10,'Coffee Gelato',5,3,155);
 
--- 5. CONCENTRATED INVENTORY
+-- 5. INVENTORY
 INSERT INTO Inventory (product_id, warehouse_id, quantity) VALUES
 (1,1,500), (1,2,300), (2,1,450), (3,3,250), (4,4,350), 
 (5,5,200), (6,1,150), (7,3,180), (8,4,220), (9,2,110);
