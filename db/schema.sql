@@ -20,8 +20,8 @@ CREATE TABLE Product (
     supplier_id  INT NOT NULL,
     category_id  INT NOT NULL,
     unit_price   DECIMAL(10,2) CHECK (unit_price >= 0),
-    FOREIGN KEY (supplier_id) REFERENCES Supplier(supplier_id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE CASCADE
+    FOREIGN KEY (supplier_id) REFERENCES Supplier(supplier_id) ON DELETE RESTRICT,
+    FOREIGN KEY (category_id) REFERENCES Category(category_id) ON DELETE RESTRICT
 );
 
 CREATE TABLE Warehouse (
@@ -48,7 +48,7 @@ CREATE TABLE Employee (
     employee_id INT PRIMARY KEY AUTO_INCREMENT,
     name        VARCHAR(100) NOT NULL,
     role_id     INT NOT NULL,
-    FOREIGN KEY (role_id) REFERENCES Role(role_id)
+    FOREIGN KEY (role_id) REFERENCES Role(role_id) ON DELETE RESTRICT
 );
 
 CREATE TABLE Permanent_Employee (
@@ -71,9 +71,10 @@ CREATE TABLE Stock_Transaction (
     transaction_type ENUM('INWARD','OUTWARD') NOT NULL,
     product_id       INT NOT NULL,
     warehouse_id     INT NOT NULL,
-    employee_id      INT NOT NULL,
+    employee_id      INT, -- Removed NOT NULL so it can be blank
     quantity         INT NOT NULL CHECK (quantity > 0),
     FOREIGN KEY (product_id)   REFERENCES Product(product_id) ON DELETE CASCADE,
     FOREIGN KEY (warehouse_id) REFERENCES Warehouse(warehouse_id) ON DELETE CASCADE,
-    FOREIGN KEY (employee_id)  REFERENCES Employee(employee_id) ON DELETE CASCADE
+    -- When employee is deleted, their ID here becomes NULL
+    FOREIGN KEY (employee_id)  REFERENCES Employee(employee_id) ON DELETE SET NULL
 );
