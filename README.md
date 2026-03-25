@@ -26,6 +26,17 @@ The application is strictly focused on inventory control and internal warehouse 
 
 ---
 
+<!-- ## 📸 Preview
+| Dashboard Overview | Inventory Tracking |
+| :---: | :---: |
+| ![Dashboard Screenshot](path/to/screenshot1.png) | ![Inventory Screenshot](path/to/screenshot2.png) |
+
+| Product Management | Stock Transactions |
+| :---: | :---: |
+| ![Products Screenshot](path/to/screenshot3.png) | ![Transactions Screenshot](path/to/screenshot4.png) |
+
+---
+-->
 ## 🧠 Database Design (3NF)
 
 The database follows **Third Normal Form (3NF)**.
