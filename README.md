@@ -224,7 +224,7 @@ uvicorn backend.api:app --reload
 ## 👩‍💻 Author
 
 **Meghna Ravikumar**  
-B.Tech CSE (AI & ML) – VIT Chennai
+Copyright (c) 2026 Meghna Ravikumar. All rights reserved. No part of this software may be reproduced or distributed without permission.
 
 ---
 
