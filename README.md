@@ -14,15 +14,15 @@ The application is strictly focused on inventory control and internal warehouse 
 
 ---
 
-## 🚀 Features
+## Features
 
-- 📊 Real-time inventory dashboard
-- 📦 Product & supplier management
-- 🏢 Warehouse stock tracking
-- 🔁 Stock movement logging (INWARD / OUTWARD)
-- 👨‍💼 Employee management (role-based)
-- 📈 Charts for stock distribution & daily transactions
-- 🧱 Fully normalized database (up to 3NF)
+- Real-time inventory dashboard
+- Product & supplier management
+- Warehouse stock tracking
+- Stock movement logging (INWARD / OUTWARD)
+- Employee management (role-based)
+- Charts for stock distribution & daily transactions
+- Fully normalized database (up to 3NF)
 
 ---
 
@@ -37,7 +37,7 @@ The application is strictly focused on inventory control and internal warehouse 
 
 ---
 -->
-## 🧠 Database Design (3NF)
+## Database Design (3NF)
 
 The database follows **Third Normal Form (3NF)**.
 
@@ -64,7 +64,7 @@ The database follows **Third Normal Form (3NF)**.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer      | Technology                  |
 |------------|-----------------------------|
@@ -75,7 +75,7 @@ The database follows **Third Normal Form (3NF)**.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 inventory-management-system/
@@ -107,9 +107,9 @@ inventory-management-system/
 
 ---
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
-### 1️⃣ Start MySQL (Docker)
+### 1️. Start MySQL (Docker)
 
 ```bash
 docker start swims-mysql
@@ -126,7 +126,7 @@ docker run -d \
   mysql:latest
 ```
 
-### 2️⃣ Load Database
+### 2️. Load Database
 
 ```bash
 docker cp db/schema.sql swims-mysql:/schema.sql
@@ -142,7 +142,7 @@ SOURCE /schema.sql;
 SOURCE /seed_data.sql;
 ```
 
-### 3️⃣ Backend Setup
+### 3️. Backend Setup
 
 ```bash
 pip install -r ../requirements.txt
@@ -157,7 +157,7 @@ uvicorn backend.api:app --reload
 
 API runs at: `http://127.0.0.1:8000`
 
-### 4️⃣ Frontend Setup
+### 4️. Frontend Setup
 
 ```bash
 cd ui
@@ -169,7 +169,7 @@ Frontend runs at: `http://localhost:5173`
 
 ---
 
-## 🔗 API Endpoints
+## API Endpoints
 
 | Endpoint        | Description          |
 |-----------------|----------------------|
@@ -182,7 +182,7 @@ Frontend runs at: `http://localhost:5173`
 
 ---
 
-## 📊 Dashboard Includes
+## Dashboard Includes
 
 - Total Products
 - Total Suppliers
@@ -193,7 +193,7 @@ Frontend runs at: `http://localhost:5173`
 
 ---
 
-## ⚠️ Common Issues & Fixes
+## Common Issues & Fixes
 
 **❌ Empty API response (`[]`)**
 - ✔ Ensure DB is loaded using `SOURCE`
@@ -211,7 +211,7 @@ uvicorn backend.api:app --reload
 
 ---
 
-## 📌 Future Improvements
+## Future Improvements
 
 - Authentication system
 - Role-based access control
@@ -221,14 +221,13 @@ uvicorn backend.api:app --reload
 
 ---
 
-## 👩‍💻 Author
+## Author
 
 **Meghna Ravikumar**  
-Copyright (c) 2026 Meghna Ravikumar. All rights reserved. No part of this software may be reproduced or distributed without permission.
 
 ---
 
-## ⭐ Final Note
+## Final Note
 
 This project demonstrates:
 - Practical DBMS normalization (3NF)
